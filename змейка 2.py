@@ -23,6 +23,14 @@ snake_navigation_x = 0
 snake_navigation_y = 0
 apple_count = 0
 game_running = True
+snake_level = int(input("уровень сложности: 1,2,3\n"))
+speed = 0
+if snake_level == 1:
+    speed = 0.2
+if snake_level == 2:
+    speed = 0.1
+if snake_level == 3:
+    speed = 0
 
 
 def snake_paint(c, x, y):
@@ -99,6 +107,7 @@ def snake_run():
     snake_y += snake_navigation_y
     snake_paint(c, snake_x, snake_y)
     snake_del()
+    time.sleep(speed)
 
 
 c.create_rectangle(0, 0, 1000, 1000, fill="red")
