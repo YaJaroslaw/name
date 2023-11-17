@@ -13,24 +13,31 @@ snake_size = 6
 item_size = 20
 snake_list = []
 apple_list = []
+stone_list = []
 snake_color = "green"
 snake_color1 = "black"
 snake_x = width // item_size // 2
 snake_y = height // item_size // 2
 apple_x = random.randint(1, 48)
 apple_y = random.randint(1, 48)
+stone_x = random.randint(1, 48)
+stone_y = random.randint(1, 48)
 snake_navigation_x = 0
 snake_navigation_y = 0
 apple_count = 0
+stone_count = 0
 game_running = True
+
+'''
 snake_level = int(input("уровень сложности: 1,2,3\n"))
 speed = 0
-if snake_level == 1:
-    speed = 0.2
+
+    
 if snake_level == 2:
     speed = 0.1
 if snake_level == 3:
     speed = 0
+'''
 
 
 def snake_paint(c, x, y):
@@ -70,7 +77,7 @@ def snake_eat(c, x1, y1):
     global apple_list
     global apple_x
     global apple_y
-    if apple_count <1:
+    if apple_count < 1:
         uid3 = c.create_oval(x1 * item_size, y1 * item_size, x1 * item_size + item_size,
                              y1 * item_size + item_size, fill="black")
         uid4 = c.create_oval(x1 * item_size + 2, y1 * item_size + 2, x1 * item_size + item_size - 2,
@@ -87,6 +94,25 @@ def snake_eat(c, x1, y1):
         snake_size += 1
 
 
+def stones(c, x1, y1):
+    global snake_size, stone_count, game_running
+    global stone_list
+    global stone_x
+    global stone_y
+    if stone_count < 70:
+        uid3 = c.create_oval(x1 * item_size, y1 * item_size, x1 * item_size + item_size,
+                             y1 * item_size + item_size, fill="grey")
+        uid4 = c.create_oval(x1 * item_size + 2, y1 * item_size + 2, x1 * item_size + item_size - 2,
+                             y1 * item_size + item_size - 2, fill="grey")
+        stone_x = random.randint(1, 48)
+        stone_y = random.randint(1, 48)
+        stone_list.append([x1, y1, uid3, uid4])
+        stone_count += 1
+    for i in range(len(stone_list)):
+        if stone_list[i][0] == snake_x and stone_list[i][1] == snake_y:
+            game_running = False
+
+
 def zone():
     global snake_x, snake_y, game_running
     if snake_x > 48 or snake_y > 48 or snake_x < 1 or snake_y < 1:
@@ -97,7 +123,7 @@ def snake_die(head_x, head_y):
     global snake_list, game_running, snake_navigation_x, snake_navigation_y
     if not (snake_navigation_x == 0 and snake_navigation_y == 0):
         for i in range(len(snake_list)):
-            if snake_list[i][0] == head_x or snake_list[i][1] == head_y:
+            if snake_list[i][0] == head_x and snake_list[i][1] == head_y:
                 game_running = False
 
 
@@ -120,8 +146,9 @@ snake_paint(c, snake_x, snake_y)
 while game_running:
     zone()
     snake_eat(c, apple_x, apple_y)
+    stones(c, stone_x, stone_y)
     snake_run()
-#   snake_die(snake_x + snake_navigation_x, snake_y + snake_navigation_y)
+    snake_die(snake_x + snake_navigation_x, snake_y + snake_navigation_y)
     window.update_idletasks()
     window.update()
     time.sleep(0.15)
